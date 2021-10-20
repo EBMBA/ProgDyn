@@ -1,0 +1,1 @@
+void initMatrix(int **matrix, int size_t, int numberOne);

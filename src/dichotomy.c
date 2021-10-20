@@ -10,26 +10,24 @@
 int find_by_dichotomy(int array[], int size_t, int value ) {
     int max = size_t, min = 0, position = 0, index = -1;
 
-    if ( (value < array[max]) || (value > array[min]) )
+    do
     {
-        do
-        {
         position = (min + max) / 2;
         if (array[position] < value)
         {
-            min = position;
-            printf(" min : %d", min);
+            min = position+1;
+            //printf(" min : %d", min);
         }
         else{
-            max =  position;
-            printf(" max : %d", max);
+            max =  position-1;
+            //printf(" max : %d", max);
         }
+        if (min >= max)
+            break;
 
-        } while (( array[position] != value ) || (value < array[max]));
-    
-    }
-    
-    
+    } while ( array[position] != value );
+
+
     if (array[position] == value )
     {
         index = position;
