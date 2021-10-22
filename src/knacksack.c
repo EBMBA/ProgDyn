@@ -8,19 +8,20 @@ void swap_object(Object *h, int index1, int index2){
     h[index2] = temp;
 }
 
-int calculate(Object *tab, int index){
-    return (tab[index].value / tab[index].weight);
+float calculate(Object *tab, int index){
+    return ((float) tab[index].value / tab[index].weight);
 }
 
 void sort(Object *tab, int size_t){
-    int max = tab[0].value / tab[0].weight;
-
-    for (int i = 0; i < size_t; i++)
+    for (int i = 0; i < size_t -1 ; i++)
     {
-        for (int j = i + 1; j < size_t; j++){
-            if (calculate(tab, i) < calculate(tab, j)){
-                    swap_object(tab, i, j);
+        for (int j = i+1; j < size_t; j++)
+        {
+            if (calculate(tab, i) < calculate(tab, j))
+            {
+                swap_object(tab, i, j);
             }
+            
         }
     }
 }
@@ -43,7 +44,7 @@ Object *knackSack(Object *tab, int size_t, int weightMax){
     //printObjectTab(tab, size_t);
     for (int i = 0; i < size_t; i++)
     {
-        if (tab[i].weight + w_conso < weightMax)
+        if (tab[i].weight + w_conso <= weightMax)
         {
             final[i] = tab[i];
             w_conso+=tab[i].weight;

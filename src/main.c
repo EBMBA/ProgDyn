@@ -23,7 +23,7 @@ int main()
 	objectThree.value = 5;
 	objectThree.weight = 5;
 
-	Object tabBag[3] = {objectOne, objectThree, objectThree}; 
+	Object tabBag[3] = {objectThree, objectTwo, objectOne}; 
 	Object *bag ;
 	bag = malloc(3 * sizeof(Object));
 	bag = knackSack(tabBag, 3, 10);
@@ -34,24 +34,14 @@ int main()
 	// PGCB
 	int **matrix;
 	int nrows = 20, ncols = 20, sizeMatrix = 20;
-	matrix = malloc(nrows * sizeof(int *));
-	if(matrix == NULL)
-	{
-		fprintf(stderr, "out of memory\n");
-		exit;
-	}
-	for (int i = 0; i < nrows; i++)
-	{
-		matrix[i] = malloc(ncols * sizeof(int));
-		if(matrix[i] == NULL)
-		{
-			fprintf(stderr, "out of memory\n");
-			exit;
-		}
-	}
+	matrix = createMatrix(nrows, ncols);
 	
 	initMatrix(matrix, sizeMatrix, 10);
 
-	free(matrix); free(bag); 
+	PGCB square;
+	square = maxSquare(matrix, sizeMatrix);
+	printMatrixSquare(matrix, sizeMatrix, square);
+
+	freeMatrix(matrix); free(bag); 
 	return (0);
 }
