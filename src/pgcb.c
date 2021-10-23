@@ -1,9 +1,25 @@
+/**
+ * @file pgcb.c
+ * @author Emile METRAL
+ * @brief 
+ * @version 0.1
+ * @date 2021-10-23
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "pgcb.h"
 
-
+/**
+ * @brief Create a Matrix object
+ * 
+ * @param nrows Number of rows
+ * @param ncols Number of columns 
+ * @return int** Matrix
+ */
 int **createMatrix(int nrows, int ncols){
     int **matrix;
     matrix = malloc(nrows * sizeof(int *));
@@ -24,11 +40,22 @@ int **createMatrix(int nrows, int ncols){
     return matrix;
 }
 
+/**
+ * @brief Free matrix's allocation memory 
+ * 
+ * @param matrix 
+ */
 void freeMatrix(int **matrix){
 	free(matrix[0]);
 	free(matrix);
 }
 
+/**
+ * @brief Display initial matrix
+ * 
+ * @param matrix Matrix
+ * @param size_t Size 
+ */
 void printMatrix(int **matrix, int size_t){
     for (int i = 0; i < size_t; i++)
     {
@@ -37,12 +64,19 @@ void printMatrix(int **matrix, int size_t){
             if (matrix[i][n] == 1)
                 printf("* ");
             else
-                printf(" ");
+                printf("  ");
         }
         printf("\n");
     }
 }
 
+/**
+ * @brief Display final matrix
+ * 
+ * @param matrix 
+ * @param size_t 
+ * @param square Greatest free white suare object
+ */
 void printMatrixSquare(int **matrix, int size_t, PGCB square){
   
     for (int i = square.x; i > (square.x - square.size); i--)
@@ -50,9 +84,7 @@ void printMatrixSquare(int **matrix, int size_t, PGCB square){
         for (int n = square.y; n > (square.y - square.size); n--)
         {
             matrix[i][n] = 2;
-            //printf("2\n");
         }
-        printf("\n");
     }
     
     for (int i = 0; i < size_t; i++)
@@ -64,13 +96,20 @@ void printMatrixSquare(int **matrix, int size_t, PGCB square){
             else if (matrix[i][n] == 2)
                 printf("# ");             
             else
-                printf(" ");
+                printf("  ");
         }
         printf("\n");
     }
     
 }
 
+/**
+ * @brief Initialize matrix 
+ * 
+ * @param matrix 
+ * @param size_t 
+ * @param numberOne Number of black square
+ */
 void initMatrix(int **matrix, int size_t, int numberOne){
 
     int numberOneDone = 0;
@@ -97,6 +136,14 @@ void initMatrix(int **matrix, int size_t, int numberOne){
     printMatrix(matrix, size_t);
 }
 
+/**
+ * @brief Return lower number of the three
+ * 
+ * @param a 
+ * @param b 
+ * @param c 
+ * @return int 
+ */
 int min (int a, int b, int c){
     if ( a > b && c > b)
     {
@@ -112,60 +159,77 @@ int min (int a, int b, int c){
     }
 }
 
-PGCB maxSquare(int **matrix, int size){
-    PGCB square;
-    int max = 1; 
-    square.size = 1;
-
-    for (int i = 1; i < size; i++)
+/**
+ * @brief Return the biggest number of the two
+ * 
+ * @param a 
+ * @param b 
+ * @return int 
+ */
+int max (int a, int b){
+    if ( a < b)
     {
-        for (int j = 1; j < size; j++)
-        {
-            if( (matrix[i][j] != 0)){
-                int leftTop = matrix[i-max][j-max];
-                int rightTop = matrix[i-max][j];
-                int left = matrix[i][j-max];
-                printf("leftTop : %d\n", leftTop);
-                printf("rightTop : %d\n", rightTop);
-                printf("left : %d\n", left);
-                
-
-                if (leftTop != 1 && rightTop != 1 && left != 1)
-                {
-                    max ++;
-                    printf("max : %d\n", max);
-                }
-                if (max > square.size)
-                {
-                    square.size = max;
-                    square.x = i;
-                    square.y = j;
-                }
-                
-            }
-        }
+        return b;
     }
-    
-    return square;
+    else
+    {
+        return a;
+    }
 }
 
+/**
+ * @brief Find the biggest white square and return it. 
+ * 
+ * @param matrix 
+ * @param nrows Number of rows
+ * @param ncols Number of columns 
+ * @return PGCB biggest white square object
+ */
+PGCB gws(int **matrix,int nrows, int ncols){
+    int **newMatrix = createMatrix(nrows, ncols);
 
+    for (int i = 0; i < ncols; i++)
+    {
+        newMatrix[0][i] = 1;
+    }
 
-// int **pgcb(int **matrix,int y, int x, int nrows, int ncols){
-//     // if (matrix ==  NULL)
-//     // {
-//     //     matrix = createMatrix(nrows, ncols);
-//     //     return matrix;
-//     // }
-//     // if (matrix[x][y] == 1)
-//     // {
-//     //     return 0;
-//     // }
-//     // if (x == 0 || y == 0) {
-//     //     return 1;
-//     // }  
-//     // else{
-//     //     matrix[x][y] = 1 + min(PGCB(x-1,y-1),PGCB(x,y-1),PGCB(x-1,y));
-//     //     return matrix[x][y];
-//     // }
-// }
+    for (int i = 0; i < nrows; i++)
+    {
+        newMatrix[i][0] = 1;
+    }
+
+    PGCB res;
+    res.size = 0;
+    int resMax = 1;
+    //printMatrix(newMatrix, nrows);
+
+    for (int i = 1; i < nrows; i++)
+    {
+        for (int j = 1; j < ncols; j++)
+        {
+            if( (matrix[i][j] == matrix[i-1][j]) && (matrix[i][j] == matrix[i][j-1])  && (matrix[i][j] == matrix[i-1][j-1]))
+            {
+                newMatrix[i][j] = 1 + min(newMatrix[i-1][j], newMatrix[i][j-1], newMatrix[i-1][j-1]);
+                resMax = max(resMax, newMatrix[i][j]);
+
+                if (resMax > res.size)
+                {
+                    res.size = resMax;
+                    res.x = i;
+                    res.y = j;
+                }
+
+                //printf("res : %d\nmatrix: %d\n", resMax, newMatrix[i][j]);
+
+            }
+            else
+            {
+                newMatrix[i][j] = 1;
+            }
+        }
+        
+    }
+    //printMatrix(newMatrix, nrows);
+    freeMatrix(newMatrix);    
+    return res;
+}

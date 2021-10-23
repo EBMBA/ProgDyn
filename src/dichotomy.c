@@ -1,7 +1,17 @@
+/**
+ * @file dichotomy.c
+ * @author Emile METRAL
+ * @brief 
+ * @version 0.1
+ * @date 2021-10-23
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 #include <stdio.h>
 
 /**
- * Recherche par dichotomie dans un tableau d'entiers
+ * @brief Search by dichotomy in an integer array
  * @param array The array of values
  * @param size_t  The size of the array
  * @param value  The value to find
